@@ -83,3 +83,5 @@ Main UI features:
 - Detailed demo brief: `docs/detail-demo-brief.md`
 ## 13. Web API/REST API Research Notes
 - Demo opening research notes: `docs/web-api-rest-api-demo-research.md`
+## 14. API Providers Research (Free vs Paid)
+- Provider comparison + selected integration scope: `docs/api-providers-free-vs-paid.md`

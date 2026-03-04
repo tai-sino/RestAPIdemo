@@ -61,6 +61,7 @@ Smoke test đã chạy:
 - Module 4: `docs/module-4-borrow-return.md`
 - Module 5: `docs/module-5-external-api.md`
 - Module 6: `docs/module-6-deliverables.md`
+- Research note (free vs paid API providers): `docs/api-providers-free-vs-paid.md`
 
 ## 7. Trạng thái hoàn thành
 Project đã hoàn thành đủ các module theo kế hoạch và sẵn sàng dùng để học + demo môn Web API/REST API.
