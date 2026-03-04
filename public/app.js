@@ -57,6 +57,29 @@ const dom = {
   toastContainer: document.getElementById('toastContainer'),
 };
 
+function getRoleLabel(role) {
+  if (role === 'admin') {
+    return 'quản trị viên';
+  }
+  if (role === 'user') {
+    return 'người dùng';
+  }
+  return 'khách';
+}
+
+function getBorrowStatusLabel(status) {
+  if (status === 'borrowing') {
+    return 'đang mượn';
+  }
+  if (status === 'returned') {
+    return 'đã trả';
+  }
+  if (status === 'late') {
+    return 'quá hạn';
+  }
+  return status || '-';
+}
+
 function loadSession() {
   const raw = localStorage.getItem(SESSION_KEY);
   if (!raw) {
@@ -109,10 +132,10 @@ function formatDate(value) {
     return String(value);
   }
 
-  return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
+  return `${date.toLocaleDateString('vi-VN')} ${date.toLocaleTimeString('vi-VN')}`;
 }
 
-function setButtonLoading(button, isLoading, loadingText = 'Working...') {
+function setButtonLoading(button, isLoading, loadingText = 'Đang xử lý...') {
   if (!button) {
     return;
   }
@@ -139,7 +162,7 @@ async function apiRequest(path, options = {}) {
 
   if (options.auth) {
     if (!state.token) {
-      throw new Error('Please login first.');
+      throw new Error('Vui lòng đăng nhập trước.');
     }
     config.headers.Authorization = `Bearer ${state.token}`;
   }
@@ -157,12 +180,12 @@ async function apiRequest(path, options = {}) {
   } catch (_error) {
     payload = {
       success: false,
-      message: 'Unexpected server response.',
+      message: 'Phản hồi từ máy chủ không hợp lệ.',
     };
   }
 
   if (!response.ok || payload.success === false) {
-    const error = new Error(payload.message || `Request failed (${response.status}).`);
+    const error = new Error(payload.message || `Yêu cầu thất bại (${response.status}).`);
     error.payload = payload;
     error.status = response.status;
     throw error;
@@ -188,23 +211,23 @@ function toOptionalNumber(value) {
 
 function updateAuthView() {
   if (!state.user) {
-    dom.authStatus.textContent = 'Guest mode';
+    dom.authStatus.textContent = 'Chế độ khách';
     dom.authStatus.className = 'pill muted';
     dom.logoutBtn.disabled = true;
-    dom.profileName.textContent = 'Not logged in';
+    dom.profileName.textContent = 'Chưa đăng nhập';
     dom.profileEmail.textContent = '-';
-    dom.profileRole.textContent = 'guest';
+    dom.profileRole.textContent = 'khách';
     dom.adminPanel.hidden = true;
     dom.adminBorrowsPanel.hidden = true;
     return;
   }
 
-  dom.authStatus.textContent = `${state.user.role.toUpperCase()} signed in`;
+  dom.authStatus.textContent = `Đã đăng nhập: ${getRoleLabel(state.user.role)}`;
   dom.authStatus.className = `pill ${state.user.role === 'admin' ? 'admin' : 'muted'}`;
   dom.logoutBtn.disabled = false;
   dom.profileName.textContent = state.user.name;
   dom.profileEmail.textContent = state.user.email;
-  dom.profileRole.textContent = state.user.role;
+  dom.profileRole.textContent = getRoleLabel(state.user.role);
 
   const isAdmin = state.user.role === 'admin';
   dom.adminPanel.hidden = !isAdmin;
@@ -231,14 +254,14 @@ function updateBookPagination() {
   const total = state.booksMeta.total || 0;
   const maxPage = Math.max(1, Math.ceil(total / limit));
 
-  dom.booksMeta.textContent = `Page ${page} / ${maxPage} - ${total} books`;
+  dom.booksMeta.textContent = `Trang ${page} / ${maxPage} - ${total} đầu sách`;
   dom.prevPageBtn.disabled = page <= 1;
   dom.nextPageBtn.disabled = page >= maxPage;
 }
 
 function renderBooks() {
   if (state.books.length === 0) {
-    dom.booksTbody.innerHTML = '<tr><td colspan="5">No books found.</td></tr>';
+    dom.booksTbody.innerHTML = '<tr><td colspan="5">Không tìm thấy sách.</td></tr>';
     updateStats();
     updateBookPagination();
     return;
@@ -261,7 +284,7 @@ function renderBooks() {
               data-book-id="${book.id}"
               ${canBorrow ? '' : 'disabled'}
             >
-              Borrow
+              Mượn
             </button>
           </td>
         </tr>
@@ -275,13 +298,13 @@ function renderBooks() {
 
 function renderMyBorrows() {
   if (!state.user) {
-    dom.myBorrowsTbody.innerHTML = '<tr><td colspan="6">Login required.</td></tr>';
+    dom.myBorrowsTbody.innerHTML = '<tr><td colspan="6">Cần đăng nhập để xem dữ liệu.</td></tr>';
     updateStats();
     return;
   }
 
   if (state.myBorrows.length === 0) {
-    dom.myBorrowsTbody.innerHTML = '<tr><td colspan="6">No borrow record.</td></tr>';
+    dom.myBorrowsTbody.innerHTML = '<tr><td colspan="6">Chưa có lượt mượn nào.</td></tr>';
     updateStats();
     return;
   }
@@ -293,7 +316,7 @@ function renderMyBorrows() {
         <tr>
           <td>${borrow.id}</td>
           <td>${borrow.book_title}</td>
-          <td>${borrow.status}</td>
+          <td>${getBorrowStatusLabel(borrow.status)}</td>
           <td>${formatDate(borrow.borrowed_at)}</td>
           <td>${borrow.due_date || '-'}</td>
           <td>
@@ -304,7 +327,7 @@ function renderMyBorrows() {
               data-borrow-id="${borrow.id}"
               ${canReturn ? '' : 'disabled'}
             >
-              Return
+              Trả sách
             </button>
           </td>
         </tr>
@@ -322,7 +345,7 @@ function renderAllBorrows() {
   }
 
   if (state.allBorrows.length === 0) {
-    dom.allBorrowsTbody.innerHTML = '<tr><td colspan="6">No borrow records.</td></tr>';
+    dom.allBorrowsTbody.innerHTML = '<tr><td colspan="6">Không có lượt mượn.</td></tr>';
     return;
   }
 
@@ -334,7 +357,7 @@ function renderAllBorrows() {
           <td>${borrow.id}</td>
           <td>${borrow.user_name} (${borrow.user_email})</td>
           <td>${borrow.book_title}</td>
-          <td>${borrow.status}</td>
+          <td>${getBorrowStatusLabel(borrow.status)}</td>
           <td>${borrow.due_date || '-'}</td>
           <td>
             <button
@@ -344,7 +367,7 @@ function renderAllBorrows() {
               data-borrow-id="${borrow.id}"
               ${canReturn ? '' : 'disabled'}
             >
-              Return
+              Trả sách
             </button>
           </td>
         </tr>
@@ -355,7 +378,7 @@ function renderAllBorrows() {
 
 function renderExternal(items) {
   if (!items || items.length === 0) {
-    dom.externalList.innerHTML = '<li>No external result.</li>';
+    dom.externalList.innerHTML = '<li>Không có kết quả từ nguồn ngoài.</li>';
     return;
   }
 
@@ -365,8 +388,8 @@ function renderExternal(items) {
       const year = book.first_publish_year || '-';
       return `
         <li>
-          <div class="title">${book.title || 'Untitled'}</div>
-          <div class="meta">Author: ${authors} | First publish year: ${year}</div>
+          <div class="title">${book.title || 'Không có tiêu đề'}</div>
+          <div class="meta">Tác giả: ${authors} | Năm xuất bản đầu tiên: ${year}</div>
         </li>
       `;
     })
@@ -422,7 +445,7 @@ async function syncProfile() {
     saveSession();
   } catch (_error) {
     clearSession();
-    showToast('Session expired. Please login again.', 'warning');
+    showToast('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.', 'warning');
   }
 
   updateAuthView();
@@ -456,7 +479,7 @@ async function register(name, email, password) {
 
 async function borrowBook(bookId) {
   if (!state.user) {
-    throw new Error('Please login before borrowing.');
+    throw new Error('Vui lòng đăng nhập trước khi mượn sách.');
   }
 
   const body = { book_id: Number(bookId) };
@@ -475,7 +498,7 @@ async function borrowBook(bookId) {
 
 async function returnBorrow(borrowId) {
   if (!state.user) {
-    throw new Error('Please login first.');
+    throw new Error('Vui lòng đăng nhập trước.');
   }
 
   await apiRequest(`/borrows/${borrowId}/return`, {
@@ -536,7 +559,7 @@ async function updateBook(formData) {
   }
 
   if (Object.keys(payload).length === 0) {
-    throw new Error('Provide at least one field to update.');
+    throw new Error('Vui lòng nhập ít nhất một trường để cập nhật.');
   }
 
   await apiRequest(`/books/${id}`, {
@@ -566,12 +589,12 @@ function bindEvents() {
   dom.loginForm.addEventListener('submit', async (event) => {
     event.preventDefault();
     const submitBtn = dom.loginForm.querySelector('button[type="submit"]');
-    setButtonLoading(submitBtn, true, 'Logging in...');
+    setButtonLoading(submitBtn, true, 'Đang đăng nhập...');
 
     try {
       const formData = new FormData(dom.loginForm);
       await login(String(formData.get('email')), String(formData.get('password')));
-      showToast('Login successful.', 'success');
+      showToast('Đăng nhập thành công.', 'success');
       dom.loginForm.reset();
     } catch (error) {
       showToast(error.message, 'error');
@@ -583,7 +606,7 @@ function bindEvents() {
   dom.registerForm.addEventListener('submit', async (event) => {
     event.preventDefault();
     const submitBtn = dom.registerForm.querySelector('button[type="submit"]');
-    setButtonLoading(submitBtn, true, 'Creating...');
+    setButtonLoading(submitBtn, true, 'Đang tạo...');
 
     try {
       const formData = new FormData(dom.registerForm);
@@ -592,7 +615,7 @@ function bindEvents() {
         String(formData.get('email')),
         String(formData.get('password'))
       );
-      showToast('Register successful. You can login now.', 'success');
+      showToast('Đăng ký thành công. Bạn có thể đăng nhập ngay.', 'success');
       dom.registerForm.reset();
     } catch (error) {
       showToast(error.message, 'error');
@@ -609,7 +632,7 @@ function bindEvents() {
     renderMyBorrows();
     renderAllBorrows();
     renderBooks();
-    showToast('Logged out.', 'success');
+    showToast('Đã đăng xuất.', 'success');
   });
 
   dom.bookSearchBtn.addEventListener('click', async () => {
@@ -655,9 +678,9 @@ function bindEvents() {
     }
 
     try {
-      setButtonLoading(button, true, 'Borrowing...');
+      setButtonLoading(button, true, 'Đang mượn...');
       await borrowBook(button.dataset.bookId);
-      showToast('Borrow created.', 'success');
+      showToast('Mượn sách thành công.', 'success');
     } catch (error) {
       showToast(error.message, 'error');
     } finally {
@@ -672,9 +695,9 @@ function bindEvents() {
     }
 
     try {
-      setButtonLoading(button, true, 'Returning...');
+      setButtonLoading(button, true, 'Đang trả...');
       await returnBorrow(button.dataset.borrowId);
-      showToast('Book returned.', 'success');
+      showToast('Trả sách thành công.', 'success');
     } catch (error) {
       showToast(error.message, 'error');
     } finally {
@@ -685,7 +708,7 @@ function bindEvents() {
   dom.refreshMyBorrowsBtn.addEventListener('click', async () => {
     try {
       await loadMyBorrows();
-      showToast('My borrows refreshed.', 'success');
+      showToast('Đã làm mới lượt mượn của bạn.', 'success');
     } catch (error) {
       showToast(error.message, 'error');
     }
@@ -694,15 +717,15 @@ function bindEvents() {
   dom.externalSearchBtn.addEventListener('click', async () => {
     const title = dom.externalTitleInput.value.trim();
     if (!title) {
-      showToast('Please enter a title keyword.', 'warning');
+      showToast('Vui lòng nhập từ khóa tiêu đề.', 'warning');
       return;
     }
 
-    setButtonLoading(dom.externalSearchBtn, true, 'Searching...');
+    setButtonLoading(dom.externalSearchBtn, true, 'Đang tìm...');
     try {
       const items = await searchExternal(title);
       renderExternal(items);
-      showToast('External search completed.', 'success');
+      showToast('Tìm kiếm nguồn ngoài hoàn tất.', 'success');
     } catch (error) {
       showToast(error.message, 'error');
       renderExternal([]);
@@ -721,12 +744,12 @@ function bindEvents() {
   dom.createBookForm.addEventListener('submit', async (event) => {
     event.preventDefault();
     const submitBtn = dom.createBookForm.querySelector('button[type="submit"]');
-    setButtonLoading(submitBtn, true, 'Creating...');
+    setButtonLoading(submitBtn, true, 'Đang tạo...');
     try {
       await createBook(new FormData(dom.createBookForm));
       dom.createBookForm.reset();
       await refreshAllData();
-      showToast('Book created.', 'success');
+      showToast('Tạo sách thành công.', 'success');
     } catch (error) {
       showToast(error.message, 'error');
     } finally {
@@ -737,12 +760,12 @@ function bindEvents() {
   dom.updateBookForm.addEventListener('submit', async (event) => {
     event.preventDefault();
     const submitBtn = dom.updateBookForm.querySelector('button[type="submit"]');
-    setButtonLoading(submitBtn, true, 'Updating...');
+    setButtonLoading(submitBtn, true, 'Đang cập nhật...');
     try {
       await updateBook(new FormData(dom.updateBookForm));
       dom.updateBookForm.reset();
       await refreshAllData();
-      showToast('Book updated.', 'success');
+      showToast('Cập nhật sách thành công.', 'success');
     } catch (error) {
       showToast(error.message, 'error');
     } finally {
@@ -753,13 +776,13 @@ function bindEvents() {
   dom.deleteBookForm.addEventListener('submit', async (event) => {
     event.preventDefault();
     const submitBtn = dom.deleteBookForm.querySelector('button[type="submit"]');
-    setButtonLoading(submitBtn, true, 'Deleting...');
+    setButtonLoading(submitBtn, true, 'Đang xóa...');
     try {
       const formData = new FormData(dom.deleteBookForm);
       await deleteBook(Number(formData.get('id')));
       dom.deleteBookForm.reset();
       await refreshAllData();
-      showToast('Book deleted.', 'success');
+      showToast('Xóa sách thành công.', 'success');
     } catch (error) {
       showToast(error.message, 'error');
     } finally {
@@ -774,9 +797,9 @@ function bindEvents() {
     }
 
     try {
-      setButtonLoading(button, true, 'Returning...');
+      setButtonLoading(button, true, 'Đang trả...');
       await returnBorrow(button.dataset.borrowId);
-      showToast('Borrow returned by admin.', 'success');
+      showToast('Admin đã trả sách cho lượt mượn này.', 'success');
     } catch (error) {
       showToast(error.message, 'error');
     } finally {
@@ -787,7 +810,7 @@ function bindEvents() {
   dom.refreshAllBorrowsBtn.addEventListener('click', async () => {
     try {
       await loadAllBorrows();
-      showToast('All borrows refreshed.', 'success');
+      showToast('Đã làm mới toàn bộ lượt mượn.', 'success');
     } catch (error) {
       showToast(error.message, 'error');
     }

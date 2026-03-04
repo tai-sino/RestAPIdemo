@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="en">
+<html lang="vi">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Library Command Center</title>
+  <title>Trung Tâm Quản Lý Thư Viện</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -20,90 +20,90 @@
   <div class="page-shell">
     <header class="panel topbar reveal">
       <div class="brand-wrap">
-        <p class="eyebrow">REST API Frontend</p>
-        <h1>Library Command Center</h1>
+        <p class="eyebrow">Giao diện REST API</p>
+        <h1>Trung Tâm Quản Lý Thư Viện</h1>
       </div>
       <div class="top-actions">
-        <span id="authStatus" class="pill muted">Guest mode</span>
-        <button id="logoutBtn" class="btn ghost" type="button" disabled>Logout</button>
+        <span id="authStatus" class="pill muted">Chế độ khách</span>
+        <button id="logoutBtn" class="btn ghost" type="button" disabled>Đăng xuất</button>
       </div>
     </header>
 
     <main class="dashboard">
       <section class="column left">
         <article class="panel reveal">
-          <h2>Authentication</h2>
+          <h2>Xác thực</h2>
           <p class="subtle">
-            Use seeded account:
-            <code>admin@library.local / admin123</code>
+            Tài khoản mẫu có sẵn:
+            <code>admin@library.local / admin123 (admin)</code>
           </p>
 
           <form id="loginForm" class="stack-form">
             <label for="loginEmail">Email</label>
             <input id="loginEmail" name="email" type="email" placeholder="user1@example.com" required />
 
-            <label for="loginPassword">Password</label>
+            <label for="loginPassword">Mật khẩu</label>
             <input id="loginPassword" name="password" type="password" placeholder="******" required />
 
-            <button class="btn primary" type="submit">Login</button>
+            <button class="btn primary" type="submit">Đăng nhập</button>
           </form>
 
-          <div class="divider">or register new user</div>
+          <div class="divider">hoặc tạo tài khoản mới</div>
 
           <form id="registerForm" class="stack-form">
-            <label for="registerName">Name</label>
-            <input id="registerName" name="name" type="text" placeholder="New reader" required />
+            <label for="registerName">Họ tên</label>
+            <input id="registerName" name="name" type="text" placeholder="Người đọc mới" required />
 
             <label for="registerEmail">Email</label>
             <input id="registerEmail" name="email" type="email" placeholder="new@example.com" required />
 
-            <label for="registerPassword">Password</label>
-            <input id="registerPassword" name="password" type="password" placeholder="min 6 chars" required />
+            <label for="registerPassword">Mật khẩu</label>
+            <input id="registerPassword" name="password" type="password" placeholder="ít nhất 6 ký tự" required />
 
-            <button class="btn soft" type="submit">Create account</button>
+            <button class="btn soft" type="submit">Tạo tài khoản</button>
           </form>
         </article>
 
         <article id="profileCard" class="panel reveal profile-card">
-          <h2>Current Session</h2>
+          <h2>Phiên hiện tại</h2>
           <div class="profile-grid">
-            <span>Name</span><strong id="profileName">Not logged in</strong>
+            <span>Họ tên</span><strong id="profileName">Chưa đăng nhập</strong>
             <span>Email</span><strong id="profileEmail">-</strong>
-            <span>Role</span><strong id="profileRole">guest</strong>
+            <span>Vai trò</span><strong id="profileRole">khách</strong>
           </div>
         </article>
 
         <article id="adminPanel" class="panel reveal" hidden>
-          <h2>Admin Book Actions</h2>
-          <p class="subtle">Create, update, and delete books from this panel.</p>
+          <h2>Quản lý sách (Admin)</h2>
+          <p class="subtle">Tạo, cập nhật và xóa sách trong khu vực này.</p>
 
           <form id="createBookForm" class="stack-form compact">
-            <h3>Create Book</h3>
-            <input name="title" type="text" placeholder="Title" required />
-            <input name="author" type="text" placeholder="Author" required />
-            <input name="isbn" type="text" placeholder="ISBN (optional)" />
-            <input name="published_year" type="number" placeholder="Year (optional)" />
-            <input name="total_copies" type="number" placeholder="Total copies" min="0" required />
-            <input name="available_copies" type="number" placeholder="Available copies (optional)" min="0" />
-            <button class="btn primary" type="submit">Create</button>
+            <h3>Tạo sách mới</h3>
+            <input name="title" type="text" placeholder="Tiêu đề" required />
+            <input name="author" type="text" placeholder="Tác giả" required />
+            <input name="isbn" type="text" placeholder="ISBN (không bắt buộc)" />
+            <input name="published_year" type="number" placeholder="Năm xuất bản (không bắt buộc)" />
+            <input name="total_copies" type="number" placeholder="Tổng số bản" min="0" required />
+            <input name="available_copies" type="number" placeholder="Số bản khả dụng (không bắt buộc)" min="0" />
+            <button class="btn primary" type="submit">Tạo</button>
           </form>
 
           <form id="updateBookForm" class="stack-form compact">
-            <h3>Update Book</h3>
-            <input name="id" type="number" placeholder="Book ID" min="1" required />
-            <input name="title" type="text" placeholder="Title (optional)" />
-            <input name="author" type="text" placeholder="Author (optional)" />
-            <input name="isbn" type="text" placeholder="ISBN (optional)" />
-            <input name="published_year" type="number" placeholder="Year (optional)" />
-            <input name="total_copies" type="number" placeholder="Total copies (optional)" min="0" />
-            <input name="available_copies" type="number" placeholder="Available copies (optional)" min="0" />
-            <button class="btn soft" type="submit">Update</button>
+            <h3>Cập nhật sách</h3>
+            <input name="id" type="number" placeholder="ID sách" min="1" required />
+            <input name="title" type="text" placeholder="Tiêu đề (không bắt buộc)" />
+            <input name="author" type="text" placeholder="Tác giả (không bắt buộc)" />
+            <input name="isbn" type="text" placeholder="ISBN (không bắt buộc)" />
+            <input name="published_year" type="number" placeholder="Năm xuất bản (không bắt buộc)" />
+            <input name="total_copies" type="number" placeholder="Tổng số bản (không bắt buộc)" min="0" />
+            <input name="available_copies" type="number" placeholder="Số bản khả dụng (không bắt buộc)" min="0" />
+            <button class="btn soft" type="submit">Cập nhật</button>
           </form>
 
           <form id="deleteBookForm" class="stack-form compact">
-            <h3>Delete Book</h3>
-            <input name="id" type="number" placeholder="Book ID" min="1" required />
-            <button class="btn danger" type="submit">Delete</button>
+            <h3>Xóa sách</h3>
+            <input name="id" type="number" placeholder="ID sách" min="1" required />
+            <button class="btn danger" type="submit">Xóa</button>
           </form>
         </article>
       </section>
@@ -111,37 +111,37 @@
       <section class="column right">
         <article class="panel reveal metrics">
           <div class="metric-card">
-            <p>Total Books</p>
+            <p>Tổng số sách</p>
             <strong id="statTotalBooks">0</strong>
           </div>
           <div class="metric-card">
-            <p>Available Copies</p>
+            <p>Bản còn sẵn</p>
             <strong id="statAvailableCopies">0</strong>
           </div>
           <div class="metric-card">
-            <p>My Borrow Records</p>
+            <p>Lượt mượn của tôi</p>
             <strong id="statMyBorrows">0</strong>
           </div>
           <div class="metric-card">
-            <p>Open Borrows</p>
+            <p>Lượt đang mượn</p>
             <strong id="statOpenBorrows">0</strong>
           </div>
         </article>
 
         <article class="panel reveal">
           <div class="row-between">
-            <h2>Books</h2>
+            <h2>Danh sách sách</h2>
             <div class="inline-inputs">
-              <input id="bookKeyword" type="text" placeholder="Search title/author" />
-              <button id="bookSearchBtn" class="btn soft" type="button">Search</button>
+              <input id="bookKeyword" type="text" placeholder="Tìm theo tiêu đề/tác giả" />
+              <button id="bookSearchBtn" class="btn soft" type="button">Tìm kiếm</button>
             </div>
           </div>
           <div class="row-between">
             <div class="inline-inputs">
-              <label for="dueDateInput">Default Due Date</label>
+              <label for="dueDateInput">Hạn trả mặc định</label>
               <input id="dueDateInput" type="date" />
             </div>
-            <p id="booksMeta" class="subtle">Page 1</p>
+            <p id="booksMeta" class="subtle">Trang 1</p>
           </div>
 
           <div class="table-wrap">
@@ -149,10 +149,10 @@
               <thead>
                 <tr>
                   <th>ID</th>
-                  <th>Title</th>
-                  <th>Author</th>
-                  <th>Available</th>
-                  <th>Action</th>
+                  <th>Tiêu đề</th>
+                  <th>Tác giả</th>
+                  <th>Khả dụng</th>
+                  <th>Thao tác</th>
                 </tr>
               </thead>
               <tbody id="booksTbody"></tbody>
@@ -160,26 +160,26 @@
           </div>
 
           <div class="row-between">
-            <button id="prevPageBtn" class="btn ghost" type="button">Prev</button>
-            <button id="nextPageBtn" class="btn ghost" type="button">Next</button>
+            <button id="prevPageBtn" class="btn ghost" type="button">Trang trước</button>
+            <button id="nextPageBtn" class="btn ghost" type="button">Trang sau</button>
           </div>
         </article>
 
         <article class="panel reveal">
           <div class="row-between">
-            <h2>My Borrows</h2>
-            <button id="refreshMyBorrowsBtn" class="btn ghost" type="button">Refresh</button>
+            <h2>Lượt mượn của tôi</h2>
+            <button id="refreshMyBorrowsBtn" class="btn ghost" type="button">Làm mới</button>
           </div>
           <div class="table-wrap">
             <table>
               <thead>
                 <tr>
                   <th>ID</th>
-                  <th>Book</th>
-                  <th>Status</th>
-                  <th>Borrowed At</th>
-                  <th>Due Date</th>
-                  <th>Action</th>
+                  <th>Sách</th>
+                  <th>Trạng thái</th>
+                  <th>Thời gian mượn</th>
+                  <th>Hạn trả</th>
+                  <th>Thao tác</th>
                 </tr>
               </thead>
               <tbody id="myBorrowsTbody"></tbody>
@@ -188,29 +188,29 @@
         </article>
 
         <article class="panel reveal">
-          <h2>External Search (Open Library)</h2>
+          <h2>Tìm sách ngoài hệ thống (Open Library)</h2>
           <div class="inline-inputs">
-            <input id="externalTitleInput" type="text" placeholder="Search by title" />
-            <button id="externalSearchBtn" class="btn soft" type="button">Search</button>
+            <input id="externalTitleInput" type="text" placeholder="Tìm theo tiêu đề" />
+            <button id="externalSearchBtn" class="btn soft" type="button">Tìm kiếm</button>
           </div>
           <ul id="externalList" class="external-list"></ul>
         </article>
 
         <article id="adminBorrowsPanel" class="panel reveal" hidden>
           <div class="row-between">
-            <h2>All Borrows (Admin)</h2>
-            <button id="refreshAllBorrowsBtn" class="btn ghost" type="button">Refresh</button>
+            <h2>Tất cả lượt mượn (Admin)</h2>
+            <button id="refreshAllBorrowsBtn" class="btn ghost" type="button">Làm mới</button>
           </div>
           <div class="table-wrap">
             <table>
               <thead>
                 <tr>
                   <th>ID</th>
-                  <th>User</th>
-                  <th>Book</th>
-                  <th>Status</th>
-                  <th>Due</th>
-                  <th>Action</th>
+                  <th>Người mượn</th>
+                  <th>Sách</th>
+                  <th>Trạng thái</th>
+                  <th>Hạn trả</th>
+                  <th>Thao tác</th>
                 </tr>
               </thead>
               <tbody id="allBorrowsTbody"></tbody>
