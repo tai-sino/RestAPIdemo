@@ -79,3 +79,5 @@ Main UI features:
 - Full frontend demo guide: `docs/frontend-demo-playbook.md`
 ## 11. Brief Speaking Script
 - Short speaking script (3-5 mins): `docs/brief-demo-speaking-script.md`
+## 12. Detail Demo Brief
+- Detailed demo brief: `docs/detail-demo-brief.md`
