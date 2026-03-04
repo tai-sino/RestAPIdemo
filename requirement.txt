@@ -1,0 +1,9 @@
+7. Giới thiêu API, REST API:
+
+a. Giới thiệu, các chuẩn Web API
+
+b. Xây dựng và khai thác REST API.
+
+Xây dưng hê thống Web API và demo: Tìm hiểu các đơn vị cung cấp API (miễn
+
+phí - có phí). Xây dựng demo khai thác các API này.

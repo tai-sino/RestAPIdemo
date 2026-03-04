@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Library Command Center</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="bg-shape bg-shape-a"></div>
+  <div class="bg-shape bg-shape-b"></div>
+  <div class="bg-shape bg-shape-c"></div>
+
+  <div class="page-shell">
+    <header class="panel topbar reveal">
+      <div class="brand-wrap">
+        <p class="eyebrow">REST API Frontend</p>
+        <h1>Library Command Center</h1>
+      </div>
+      <div class="top-actions">
+        <span id="authStatus" class="pill muted">Guest mode</span>
+        <button id="logoutBtn" class="btn ghost" type="button" disabled>Logout</button>
+      </div>
+    </header>
+
+    <main class="dashboard">
+      <section class="column left">
+        <article class="panel reveal">
+          <h2>Authentication</h2>
+          <p class="subtle">
+            Use seeded account:
+            <code>admin@library.local / admin123</code>
+          </p>
+
+          <form id="loginForm" class="stack-form">
+            <label for="loginEmail">Email</label>
+            <input id="loginEmail" name="email" type="email" placeholder="user1@example.com" required />
+
+            <label for="loginPassword">Password</label>
+            <input id="loginPassword" name="password" type="password" placeholder="******" required />
+
+            <button class="btn primary" type="submit">Login</button>
+          </form>
+
+          <div class="divider">or register new user</div>
+
+          <form id="registerForm" class="stack-form">
+            <label for="registerName">Name</label>
+            <input id="registerName" name="name" type="text" placeholder="New reader" required />
+
+            <label for="registerEmail">Email</label>
+            <input id="registerEmail" name="email" type="email" placeholder="new@example.com" required />
+
+            <label for="registerPassword">Password</label>
+            <input id="registerPassword" name="password" type="password" placeholder="min 6 chars" required />
+
+            <button class="btn soft" type="submit">Create account</button>
+          </form>
+        </article>
+
+        <article id="profileCard" class="panel reveal profile-card">
+          <h2>Current Session</h2>
+          <div class="profile-grid">
+            <span>Name</span><strong id="profileName">Not logged in</strong>
+            <span>Email</span><strong id="profileEmail">-</strong>
+            <span>Role</span><strong id="profileRole">guest</strong>
+          </div>
+        </article>
+
+        <article id="adminPanel" class="panel reveal" hidden>
+          <h2>Admin Book Actions</h2>
+          <p class="subtle">Create, update, and delete books from this panel.</p>
+
+          <form id="createBookForm" class="stack-form compact">
+            <h3>Create Book</h3>
+            <input name="title" type="text" placeholder="Title" required />
+            <input name="author" type="text" placeholder="Author" required />
+            <input name="isbn" type="text" placeholder="ISBN (optional)" />
+            <input name="published_year" type="number" placeholder="Year (optional)" />
+            <input name="total_copies" type="number" placeholder="Total copies" min="0" required />
+            <input name="available_copies" type="number" placeholder="Available copies (optional)" min="0" />
+            <button class="btn primary" type="submit">Create</button>
+          </form>
+
+          <form id="updateBookForm" class="stack-form compact">
+            <h3>Update Book</h3>
+            <input name="id" type="number" placeholder="Book ID" min="1" required />
+            <input name="title" type="text" placeholder="Title (optional)" />
+            <input name="author" type="text" placeholder="Author (optional)" />
+            <input name="isbn" type="text" placeholder="ISBN (optional)" />
+            <input name="published_year" type="number" placeholder="Year (optional)" />
+            <input name="total_copies" type="number" placeholder="Total copies (optional)" min="0" />
+            <input name="available_copies" type="number" placeholder="Available copies (optional)" min="0" />
+            <button class="btn soft" type="submit">Update</button>
+          </form>
+
+          <form id="deleteBookForm" class="stack-form compact">
+            <h3>Delete Book</h3>
+            <input name="id" type="number" placeholder="Book ID" min="1" required />
+            <button class="btn danger" type="submit">Delete</button>
+          </form>
+        </article>
+      </section>
+
+      <section class="column right">
+        <article class="panel reveal metrics">
+          <div class="metric-card">
+            <p>Total Books</p>
+            <strong id="statTotalBooks">0</strong>
+          </div>
+          <div class="metric-card">
+            <p>Available Copies</p>
+            <strong id="statAvailableCopies">0</strong>
+          </div>
+          <div class="metric-card">
+            <p>My Borrow Records</p>
+            <strong id="statMyBorrows">0</strong>
+          </div>
+          <div class="metric-card">
+            <p>Open Borrows</p>
+            <strong id="statOpenBorrows">0</strong>
+          </div>
+        </article>
+
+        <article class="panel reveal">
+          <div class="row-between">
+            <h2>Books</h2>
+            <div class="inline-inputs">
+              <input id="bookKeyword" type="text" placeholder="Search title/author" />
+              <button id="bookSearchBtn" class="btn soft" type="button">Search</button>
+            </div>
+          </div>
+          <div class="row-between">
+            <div class="inline-inputs">
+              <label for="dueDateInput">Default Due Date</label>
+              <input id="dueDateInput" type="date" />
+            </div>
+            <p id="booksMeta" class="subtle">Page 1</p>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Title</th>
+                  <th>Author</th>
+                  <th>Available</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="booksTbody"></tbody>
+            </table>
+          </div>
+
+          <div class="row-between">
+            <button id="prevPageBtn" class="btn ghost" type="button">Prev</button>
+            <button id="nextPageBtn" class="btn ghost" type="button">Next</button>
+          </div>
+        </article>
+
+        <article class="panel reveal">
+          <div class="row-between">
+            <h2>My Borrows</h2>
+            <button id="refreshMyBorrowsBtn" class="btn ghost" type="button">Refresh</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Book</th>
+                  <th>Status</th>
+                  <th>Borrowed At</th>
+                  <th>Due Date</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="myBorrowsTbody"></tbody>
+            </table>
+          </div>
+        </article>
+
+        <article class="panel reveal">
+          <h2>External Search (Open Library)</h2>
+          <div class="inline-inputs">
+            <input id="externalTitleInput" type="text" placeholder="Search by title" />
+            <button id="externalSearchBtn" class="btn soft" type="button">Search</button>
+          </div>
+          <ul id="externalList" class="external-list"></ul>
+        </article>
+
+        <article id="adminBorrowsPanel" class="panel reveal" hidden>
+          <div class="row-between">
+            <h2>All Borrows (Admin)</h2>
+            <button id="refreshAllBorrowsBtn" class="btn ghost" type="button">Refresh</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>User</th>
+                  <th>Book</th>
+                  <th>Status</th>
+                  <th>Due</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="allBorrowsTbody"></tbody>
+            </table>
+          </div>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <script src="./app.js"></script>
+</body>
+</html>

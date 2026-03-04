@@ -1,0 +1,26 @@
+{
+  "name": "restapidemo",
+  "version": "1.0.0",
+  "description": "Simple Library REST API for learning Web API/REST API",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "reset-db": "node src/scripts/reset-db.js",
+    "smoke-test": "node src/scripts/smoke-test.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "axios": "^1.13.6",
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.3",
+    "morgan": "^1.10.1",
+    "sql.js": "^1.14.0"
+  }
+}
