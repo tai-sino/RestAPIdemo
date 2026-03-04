@@ -81,3 +81,5 @@ Main UI features:
 - Short speaking script (3-5 mins): `docs/brief-demo-speaking-script.md`
 ## 12. Detail Demo Brief
 - Detailed demo brief: `docs/detail-demo-brief.md`
+## 13. Web API/REST API Research Notes
+- Demo opening research notes: `docs/web-api-rest-api-demo-research.md`
