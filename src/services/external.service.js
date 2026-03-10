@@ -6,6 +6,7 @@ function normalizeBook(doc) {
     title: doc.title || null,
     author: doc.author_name?.[0] || null,
     first_publish_year: doc.first_publish_year || null,
+    languages: doc.language || null,
     isbn: doc.isbn?.[0] || null,
   };
 }

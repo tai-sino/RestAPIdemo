@@ -384,12 +384,16 @@ function renderExternal(items) {
 
   dom.externalList.innerHTML = items
     .map((book) => {
-      const authors = Array.isArray(book.authors) ? book.authors.join(', ') : '-';
+      const authors = Array.isArray(book.author) ? book.author.join(', ') : book.author || '-';
+      const languages = Array.isArray(book.languages) ? book.languages.join(', ') : book.languages || '-';
       const year = book.first_publish_year || '-';
       return `
         <li>
           <div class="title">${book.title || 'Không có tiêu đề'}</div>
-          <div class="meta">Tác giả: ${authors} | Năm xuất bản đầu tiên: ${year}</div>
+          <div class="meta">Tác giả: ${authors}</div>
+          <div class="meta">Năm xuất bản đầu tiên: ${year}</div>
+          <div class="meta">ISBN: ${book.isbn || '-'}</div>
+          <div class="meta">Ngôn ngữ: ${languages}</div>
         </li>
       `;
     })
