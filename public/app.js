@@ -392,7 +392,6 @@ function renderExternal(items) {
           <div class="title">${book.title || 'Không có tiêu đề'}</div>
           <div class="meta">Tác giả: ${authors}</div>
           <div class="meta">Năm xuất bản đầu tiên: ${year}</div>
-          <div class="meta">ISBN: ${book.isbn || '-'}</div>
           <div class="meta">Ngôn ngữ: ${languages}</div>
         </li>
       `;
